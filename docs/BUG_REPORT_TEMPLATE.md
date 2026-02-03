@@ -1,5 +1,7 @@
 # Bug Report Template
 
+Before reporting a bug, confirm you followed RUN.md exactly.
+
 Fill this in and paste it into `docs/TASKS.md` under **NOW**.
 
 ## Environment

@@ -15,8 +15,16 @@
 
     // OPTIONAL but needed for waves
     waves: [
-      { count: 10, interval: 0.8, enemy: { hp: 30, speed: 90, radius: 14 } },
-      { count: 14, interval: 0.7, enemy: { hp: 40, speed: 95, radius: 14 } }
+      // Gentle ramp: start with small FAST waves, then introduce armored/shielded, then elite/stealth.
+      { count: 6,  interval: 1.4, enemy: { color: "#ff5a5a" } }, // Basic Virus (very gentle)
+      { count: 8,  interval: 1.2, enemy: { color: "#ff5a5a" } }, // Basic Virus
+      { count: 10, interval: 1.05, enemy: { color: "#ff5a5a" } }, // Basic Virus
+      { count: 10, interval: 0.95, enemy: { color: "#ff5a5a" } }, // Basic Virus
+      { count: 12, interval: 0.9, enemy: { color: "#ff5a5a" } }, // Basic Virus
+      { count: 8,  interval: 1.0, enemy: { color: "#a0a0a0" } }, // Bacterium
+      { count: 6,  interval: 1.1, enemy: { color: "#7d5cff" } }, // Encapsulated Bacterium
+      { count: 5,  interval: 1.2, enemy: { color: "#ffb347" } }, // Protozoan Parasite
+      { count: 6,  interval: 0.9, enemy: { color: "#8a5cff" } }  // Toxin Droplet (Stealth)
     ]
   };
 

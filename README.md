@@ -3,10 +3,7 @@
 MicroWorld Defender is a small HTML/JS tower‑defense prototype that runs in the browser using classic script tags and a global `window.MWD` namespace.
 
 **Quick Start**
-1. Run a local server from the repo root:
-   - `python -m http.server 8000`
-2. Open this URL in your browser:
-   - `http://localhost:8000/index.html`
+Follow `RUN.md` exactly. It is the single source of truth for running the project.
 
 **Expected Structure**
 - `index.html` (entrypoint, script load order)
@@ -35,6 +32,7 @@ MicroWorld Defender is a small HTML/JS tower‑defense prototype that runs in th
 - Basic smoke test passes (grid renders, path renders, waves spawn, towers place and shoot).
 
 **Docs**
+- `RUN.md`
 - `docs/ARCHITECTURE.md`
 - `docs/TASKS.md`
 - `docs/BUG_REPORT_TEMPLATE.md`

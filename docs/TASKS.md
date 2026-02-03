@@ -1,11 +1,13 @@
 # Tasks Backlog
 
+All bugs must be reproduced starting from a clean run using RUN.md.
+
 Use this backlog to track bugs and roadmap items. Keep items concrete with reproduction steps and acceptance criteria.
 
 ## NOW (Critical Bugs)
 1. **MWD.towers missing on boot**
    - Repro steps:
-     - Start the game and open DevTools console.
+     - Start the game using RUN.md and open DevTools console.
      - Observe `ERROR: MWD.towers missing (towers.js problem)`.
    - Acceptance criteria:
      - `MWD.towers` is defined before `src/main.js` runs.
@@ -14,7 +16,7 @@ Use this backlog to track bugs and roadmap items. Keep items concrete with repro
 
 2. **404 for script or asset paths**
    - Repro steps:
-     - Load the game from a local server.
+     - Load the game from a local server using RUN.md.
      - Open DevTools Network tab and filter for 404s.
    - Acceptance criteria:
      - All `src/*.js` and asset paths resolve with 200.
@@ -30,7 +32,7 @@ Use this backlog to track bugs and roadmap items. Keep items concrete with repro
 
 4. **Game runs but nothing happens (“running…” with no enemies)**
    - Repro steps:
-     - Start the game and wait 10 seconds.
+     - Start the game using RUN.md and wait 10 seconds.
      - Observe no enemies or waves.
    - Acceptance criteria:
      - Enemies spawn when `waves` exist in the level.
@@ -38,7 +40,7 @@ Use this backlog to track bugs and roadmap items. Keep items concrete with repro
 
 5. **Towers place but never shoot**
    - Repro steps:
-     - Place towers near the path.
+     - Place towers near the path after starting via RUN.md.
      - Observe enemies pass without taking damage.
    - Acceptance criteria:
      - Towers acquire targets and bullets damage enemies.

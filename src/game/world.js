@@ -5,8 +5,8 @@
 
   // World config (kept as constants so later we can parameterize by level)
   const TILE = 32;
-  const COLS = 20;
-  const ROWS = 12;
+  const COLS = 26;
+  const ROWS = 16;
   const GRID_OFFSET_X = 20;
   const GRID_OFFSET_Y = 20;
 
