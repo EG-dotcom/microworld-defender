@@ -197,8 +197,9 @@
     const theme = getTheme();
 
     // Draw a thick, rounded "flow ribbon" instead of tiles
+    const scale = W.TILE / 32;
     ctx.strokeStyle = theme.path;
-    ctx.lineWidth = 18;
+    ctx.lineWidth = 18 * scale;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.beginPath();
@@ -208,7 +209,7 @@
 
     // Inner highlight line for cartoon depth
     ctx.strokeStyle = theme.pathLine;
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 6 * scale;
     ctx.beginPath();
     ctx.moveTo(waypoints[0].x, waypoints[0].y);
     for (let i = 1; i < waypoints.length; i++) ctx.lineTo(waypoints[i].x, waypoints[i].y);
@@ -236,7 +237,7 @@
         const x = a.x + dx * t;
         const y = a.y + dy * t;
         ctx.beginPath();
-        ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+        ctx.arc(x, y, 2.2 * scale, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -250,14 +251,15 @@
   function drawEnemy(e) {
     const ctx = M.ctx;
 
-    const r = (typeof e.r === "number") ? e.r : (e.radius || 14);
+    const scale = M.world.TILE / 32;
+    const r = ((typeof e.r === "number") ? e.r : (e.radius || 14)) * scale;
 
     if (isStealthed(e) && !(e.revealedTimer > 0)) return;
 
     const base = e.color || "#ff5a5a";
     const tags = Array.isArray(e.tags) ? e.tags : [];
     const t = performance.now() * 0.004;
-    const wobble = Math.sin(t + e.x * 0.03 + e.y * 0.02) * 1.5;
+    const wobble = Math.sin(t + e.x * 0.03 + e.y * 0.02) * 1.5 * scale;
     const ex = e.x + wobble;
     const ey = e.y + Math.cos(t * 1.3 + e.y * 0.02) * 1.2;
 
@@ -371,7 +373,7 @@
     }
 
     // HP bar (slight follow)
-    const barW = 34, barH = 6;
+    const barW = 34 * scale, barH = 6 * scale;
     const x = ex - barW / 2;
     const y = ey - r - 14;
 
@@ -428,84 +430,98 @@
     for (let i = 0; i < towers.length; i++) {
       const t = towers[i];
       const color = t.color || "#4aa3ff";
+      const sprites = (M.assets && M.assets.towers) ? M.assets.towers : null;
+      const sprite = sprites ? sprites[t.type] : null;
 
       if (t.type === "net_trap") {
-        drawCellBase(t.x, t.y, 9, "#9af6d9", "rgba(0,0,0,0.35)");
+        if (sprite && sprite._loaded && !sprite._error) {
+          ctx.drawImage(sprite, t.x - W.TILE / 2, t.y - W.TILE / 2, W.TILE, W.TILE);
+        } else {
+          drawCellBase(t.x, t.y, 9 * scale, "#9af6d9", "rgba(0,0,0,0.35)");
+        }
         // Web rings
         ctx.strokeStyle = "rgba(255,255,255,0.7)";
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.5 * scale;
         for (let k = 0; k < 3; k++) {
           ctx.beginPath();
-          ctx.arc(t.x, t.y, 5 + k * 5, 0, Math.PI * 2);
+          ctx.arc(t.x, t.y, (5 + k * 5) * scale, 0, Math.PI * 2);
           ctx.stroke();
         }
         // Effect radius hint
         ctx.strokeStyle = "rgba(255,255,255,0.25)";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * scale;
         ctx.beginPath();
         ctx.arc(t.x, t.y, t.effectRadius || 40, 0, Math.PI * 2);
         ctx.stroke();
         if (i === selectedIdx) {
           ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 3;
+          ctx.lineWidth = 3 * scale;
           ctx.beginPath();
-          ctx.arc(t.x, t.y, 14, 0, Math.PI * 2);
+          ctx.arc(t.x, t.y, 14 * scale, 0, Math.PI * 2);
           ctx.stroke();
         }
         continue;
       }
 
       if (t.type === "dendritic") {
-        drawCellBase(t.x, t.y, 12, "#c3b2ff", "rgba(0,0,0,0.35)");
+        if (sprite && sprite._loaded && !sprite._error) {
+          ctx.drawImage(sprite, t.x - W.TILE / 2, t.y - W.TILE / 2, W.TILE, W.TILE);
+        } else {
+          drawCellBase(t.x, t.y, 12 * scale, "#c3b2ff", "rgba(0,0,0,0.35)");
+        }
         // Spiky dendrites
         ctx.strokeStyle = "rgba(255,255,255,0.55)";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * scale;
         for (let k = 0; k < 6; k++) {
           const a = (Math.PI * 2 * k) / 6;
           ctx.beginPath();
-          ctx.moveTo(t.x + Math.cos(a) * 12, t.y + Math.sin(a) * 12);
-          ctx.lineTo(t.x + Math.cos(a) * 18, t.y + Math.sin(a) * 18);
+          ctx.moveTo(t.x + Math.cos(a) * 12 * scale, t.y + Math.sin(a) * 12 * scale);
+          ctx.lineTo(t.x + Math.cos(a) * 18 * scale, t.y + Math.sin(a) * 18 * scale);
           ctx.stroke();
         }
         ctx.strokeStyle = "rgba(255,255,255,0.35)";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * scale;
         ctx.beginPath();
         ctx.arc(t.x, t.y, t.auraRadius || 120, 0, Math.PI * 2);
         ctx.stroke();
       } else {
         // Base cell body
-        drawCellBase(t.x, t.y, 11, color, "rgba(0,0,0,0.35)");
+        if (sprite && sprite._loaded && !sprite._error) {
+          ctx.drawImage(sprite, t.x - W.TILE / 2, t.y - W.TILE / 2, W.TILE, W.TILE);
+        } else {
+          drawCellBase(t.x, t.y, 11 * scale, color, "rgba(0,0,0,0.35)");
+        }
 
         if (t.type === "neutrophil") {
           ctx.strokeStyle = "rgba(255,255,255,0.8)";
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2 * scale;
           ctx.beginPath();
-          ctx.arc(t.x, t.y, 4, 0, Math.PI * 2);
+          ctx.arc(t.x, t.y, 4 * scale, 0, Math.PI * 2);
           ctx.stroke();
         } else if (t.type === "macrophage") {
           ctx.strokeStyle = "rgba(0,0,0,0.4)";
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2 * scale;
           ctx.beginPath();
-          ctx.moveTo(t.x - 6, t.y + 2);
-          ctx.lineTo(t.x + 6, t.y + 2);
+          ctx.moveTo(t.x - 6 * scale, t.y + 2 * scale);
+          ctx.lineTo(t.x + 6 * scale, t.y + 2 * scale);
           ctx.stroke();
         } else if (t.type === "antibody") {
           ctx.strokeStyle = "rgba(255,255,255,0.9)";
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2 * scale;
           ctx.beginPath();
-          ctx.moveTo(t.x, t.y - 6);
-          ctx.lineTo(t.x - 5, t.y + 4);
-          ctx.moveTo(t.x, t.y - 6);
-          ctx.lineTo(t.x + 5, t.y + 4);
+          ctx.moveTo(t.x, t.y - 6 * scale);
+          ctx.lineTo(t.x - 5 * scale, t.y + 4 * scale);
+          ctx.moveTo(t.x, t.y - 6 * scale);
+          ctx.lineTo(t.x + 5 * scale, t.y + 4 * scale);
           ctx.stroke();
         } else if (t.type === "cytotoxic") {
           ctx.strokeStyle = "rgba(255,255,255,0.9)";
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2 * scale;
           ctx.beginPath();
-          ctx.moveTo(t.x - 6, t.y - 6);
-          ctx.lineTo(t.x + 6, t.y + 6);
-          ctx.moveTo(t.x + 6, t.y - 6);
-          ctx.lineTo(t.x - 6, t.y + 6);
+          ctx.moveTo(t.x - 6 * scale, t.y - 6 * scale);
+          ctx.lineTo(t.x + 6 * scale, t.y + 6 * scale);
+          ctx.moveTo(t.x + 6 * scale, t.y - 6 * scale);
+          ctx.lineTo(t.x - 6 * scale, t.y + 6 * scale);
           ctx.stroke();
         }
       }
@@ -517,18 +533,18 @@
         const dist = Math.hypot(dx, dy);
 
         ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * scale;
         ctx.beginPath();
         ctx.moveTo(t.x, t.y);
-        if (dist > 0) ctx.lineTo(t.x + (dx / dist) * 16, t.y + (dy / dist) * 16);
+        if (dist > 0) ctx.lineTo(t.x + (dx / dist) * 16 * scale, t.y + (dy / dist) * 16 * scale);
         ctx.stroke();
       }
 
       if (i === selectedIdx) {
         ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * scale;
         ctx.beginPath();
-        ctx.arc(t.x, t.y, 16, 0, Math.PI * 2);
+        ctx.arc(t.x, t.y, 16 * scale, 0, Math.PI * 2);
         ctx.stroke();
       }
     }
@@ -537,9 +553,10 @@
   function drawBullets() {
     const ctx = M.ctx;
     for (const b of M.towers.state.bullets) {
+      const scale = M.world.TILE / 32;
       ctx.fillStyle = "#ffe36e";
       ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.arc(b.x, b.y, b.r * scale, 0, Math.PI * 2);
       ctx.fill();
     }
   }

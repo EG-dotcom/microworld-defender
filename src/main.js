@@ -64,6 +64,28 @@
       M.canvas.width = W.WIDTH;
       M.canvas.height = W.HEIGHT;
 
+      // Assets
+      M.assets = M.assets || {};
+      M.assets.towers = M.assets.towers || {};
+
+      function preloadTowerSprites() {
+        const defs = (M.towers && M.towers.TOWER_DEFS) ? M.towers.TOWER_DEFS : [];
+        for (let i = 0; i < defs.length; i++) {
+          const d = defs[i];
+          const path = d.sprite || `assets/towers/${d.id}.png`;
+          if (M.assets.towers[d.id]) continue;
+          const img = new Image();
+          img._loaded = false;
+          img._error = false;
+          img.onload = () => { img._loaded = true; };
+          img.onerror = () => { img._error = true; };
+          img.src = path;
+          M.assets.towers[d.id] = img;
+        }
+      }
+
+      preloadTowerSprites();
+
       // State
       M.enemies = M.enemies || [];
       M.spawner = M.spawner || { active: true, waveIndex: 0, spawnedInWave: 0, spawnTimer: 0 };

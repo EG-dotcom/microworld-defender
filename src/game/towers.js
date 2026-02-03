@@ -15,6 +15,7 @@
       rate: 2.6,
       projectileSpeed: 520,
       damageType: "physical",
+      sprite: "assets/towers/neutrophil.png",
       color: "#cfe8ff",
       upgrades: {
         pathA: [
@@ -40,6 +41,7 @@
       projectileSpeed: 360,
       onHit: { slowPct: 0.25, slowDur: 1.6 },
       damageType: "biological",
+      sprite: "assets/towers/macrophage.png",
       color: "#7ad6ff",
       upgrades: {
         pathA: [
@@ -65,6 +67,7 @@
       projectileSpeed: 420,
       onHit: { markPct: 0.18, markDur: 3.0 },
       damageType: "immune",
+      sprite: "assets/towers/antibody.png",
       color: "#ffd36e",
       upgrades: {
         pathA: [
@@ -91,6 +94,7 @@
       bonusTags: ["ELITE", "BOSS"],
       bonusMult: 0.35,
       damageType: "chemical",
+      sprite: "assets/towers/cytotoxic.png",
       color: "#ff7a7a",
       upgrades: {
         pathA: [
@@ -115,6 +119,7 @@
       auraRadius: 140,
       auraRateBonus: 0.10,
       reveal: true,
+      sprite: "assets/towers/dendritic.png",
       color: "#b9a3ff",
       upgrades: {
         pathA: [
@@ -141,6 +146,7 @@
       slowDur: 3.0,
       cooldown: 8.0,
       placeOnPath: true,
+      sprite: "assets/towers/net_trap.png",
       color: "#8df7d2",
       upgrades: {
         pathA: [
@@ -171,7 +177,8 @@
 
   let mouseAttached = false;
   let keyAttached = false;
-  let selectedId = "neutrophil";
+  let selectedId = null;
+  let hasSelection = false;
   const REFUND_RATE = 0.7;
 
   function getEconomy() {
@@ -818,10 +825,10 @@
     const g = W.pixelToGrid(m.x, m.y);
     state.hover.gx = g.x;
     state.hover.gy = g.y;
-    const def = TOWER_DEF_BY_ID[selectedId];
+    const def = selectedId ? TOWER_DEF_BY_ID[selectedId] : null;
     const canPlace = canPlaceTower(g.x, g.y, def);
     const affordable = def ? canAfford(def.cost || 0) : true;
-    state.hover.valid = canPlace && affordable;
+    state.hover.valid = !!def && canPlace && affordable;
     state.hoverTowerIndex = findTowerAt(m.x, m.y);
     state.drag.x = m.x;
     state.drag.y = m.y;
@@ -869,6 +876,7 @@
           state.drag.x = m.x;
           state.drag.y = m.y;
           selectedId = p.id;
+          hasSelection = true;
           return;
         }
       }
@@ -899,9 +907,9 @@
       }
 
       state.selectedTowerIndex = -1;
-      if (state.hover.valid) placeTower(state.hover.gx, state.hover.gy, selectedId);
-      const def = TOWER_DEF_BY_ID[selectedId];
-      state.hover.valid = canPlaceTower(state.hover.gx, state.hover.gy, def);
+      if (hasSelection && state.hover.valid) placeTower(state.hover.gx, state.hover.gy, selectedId);
+      const def = selectedId ? TOWER_DEF_BY_ID[selectedId] : null;
+      state.hover.valid = !!def && canPlaceTower(state.hover.gx, state.hover.gy, def);
     });
   }
 
@@ -914,6 +922,7 @@
       const k = evt.key;
       if (k >= "1" && k <= String(order.length)) {
         selectedId = order[Number(k) - 1];
+        hasSelection = true;
       }
       if (k === "q" || k === "Q") upgradeSelected("pathA");
       if (k === "e" || k === "E") upgradeSelected("pathB");

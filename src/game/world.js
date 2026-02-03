@@ -4,7 +4,7 @@
   const M = window.MWD;
 
   // World config (kept as constants so later we can parameterize by level)
-  const TILE = 32;
+  const TILE = 64;
   const COLS = 26;
   const ROWS = 16;
   const GRID_OFFSET_X = 20;
