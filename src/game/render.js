@@ -399,6 +399,7 @@
 
   function drawTowers() {
     const ctx = M.ctx;
+    const W = M.world;
     const towers = M.towers.state.towers;
     const selectedIdx = M.towers.getSelectedIndex ? M.towers.getSelectedIndex() : -1;
 
